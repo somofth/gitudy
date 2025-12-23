@@ -22,7 +22,7 @@ export const StoryIntro: React.FC = () => {
         clearInterval(timer);
         return prev;
       });
-    }, 2000); // Show next line every 2 seconds
+    }, 1000); // Show next line every 1 second
 
     return () => clearInterval(timer);
   }, []);

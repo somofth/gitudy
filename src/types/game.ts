@@ -5,7 +5,7 @@ export type ZoneType = 'working' | 'staging' | 'local' | 'remote';
 export interface QuizStep {
   id: number;
   scenario: string;
-  currentVisualState: 'modified' | 'staged' | 'committed' | 'pushed';
+  currentVisualState: 'initial' | 'modified' | 'staged' | 'committed' | 'pushed' | 'remote-update';
   correctCommand: string;
   options: string[];
   feedback: {
@@ -18,6 +18,8 @@ export interface GameState {
   currentPhase: GamePhase;
   currentStepId: number;
   completedSteps: number[];
+  commitMessage: string | null;
+  setCommitMessage: (msg: string) => void;
   setPhase: (phase: GamePhase) => void;
   submitCommand: (command: string) => void;
   nextStep: () => void;

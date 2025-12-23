@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Toaster } from 'sonner';
 import { TitleScreen } from './components/TitleScreen';
 import { useGameStore } from './store/useGameStore';
 import { OnboardingCarousel } from './components/onboarding/OnboardingCarousel';
@@ -7,6 +8,8 @@ import { GameLayout } from './components/game/GameLayout';
 import { LoadingScreen } from './components/LoadingScreen';
 
 import { StoryIntro } from './components/StoryIntro';
+
+import { SuccessScreen } from './components/SuccessScreen';
 
 function App() {
   const { currentPhase, setPhase } = useGameStore();
@@ -24,6 +27,7 @@ function App() {
 
   return (
     <div className="w-full h-[100dvh] bg-gray-900 text-white overflow-hidden">
+      <Toaster position="top-center" richColors />
       {currentPhase === 'title' && <TitleScreen />}
       {(currentPhase === 'onboarding-concepts' || currentPhase === 'onboarding-commands') && (
         <OnboardingCarousel phase={currentPhase} />
@@ -32,6 +36,7 @@ function App() {
       {currentPhase === 'loading' && <LoadingScreen />}
       {currentPhase === 'story-intro' && <StoryIntro />}
       {currentPhase === 'game' && <GameLayout />}
+      {currentPhase === 'success' && <SuccessScreen />}
     </div>
   );
 }

@@ -2,116 +2,135 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
 import { quizSteps } from '../../data/quizData';
-import { Package, Truck, Home, Cloud, Archive, Box } from 'lucide-react';
-import type { ZoneType } from '../../types/game';
+import { Home, Box, Archive, Cloud, Lock } from 'lucide-react';
 
-// Helper to determine active zone based on step state
-const getActiveZone = (state: string): ZoneType => {
-  switch (state) {
-    case 'modified': return 'working';
-    case 'staged': return 'staging';
-    case 'committed': return 'local';
-    case 'pushed': return 'remote';
-    default: return 'working';
-  }
-};
+const activeStyle = (isActive: boolean) => 
+  isActive 
+    ? "opacity-100 scale-105 border-white shadow-[0_0_30px_rgba(255,255,255,0.1)]" 
+    : "opacity-40 grayscale scale-95 border-gray-700";
 
 export const ViewArea: React.FC = () => {
   const { currentStepId } = useGameStore();
-  const currentStep = quizSteps.find(s => s.id === currentStepId + 1); // 1-based ID vs 0-based index? Mapping logic needed.
-  // Actually store has currentStepId default 0. Let's assume we map quizSteps[currentStepId].
+  
+  // Find current step data (safe access)
+  const stepIndex = Math.min(currentStepId, quizSteps.length - 1);
+  const step = quizSteps[stepIndex];
+  
+  const visualState = step.currentVisualState;
 
-  const step = quizSteps[currentStepId] || quizSteps[0];
-  const activeZone = getActiveZone(step.currentVisualState);
+  // Visual Logic: Which zones are "Active" (Lit up)?
+  const isWorkingActive = visualState !== 'initial';
+  const isStagingActive = ['staged', 'committed', 'pushed'].includes(visualState);
+  const isLocalActive = ['committed', 'pushed'].includes(visualState);
+  const isRemoteActive = ['pushed', 'remote-update'].includes(visualState);
+
+  // File Position Logic
+  const showFileInWorking = visualState === 'modified' || visualState === 'remote-update'; 
+  const showFileInStaging = visualState === 'staged';
+  const showFileInLocal = visualState === 'committed';
+  const showFileInRemote = visualState === 'remote-update'; 
+
+  // Get commit message for display
+  const { commitMessage } = useGameStore();
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gray-800">
-      {/* Zones Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full h-full max-w-6xl">
+    <div className="flex-1 flex flex-col items-center justify-center p-2 bg-gray-900 relative">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-6xl h-auto min-h-[40vh]">
         
         {/* Working Directory */}
         <Zone 
-          title="Working Directory" 
-          sub="My Room" 
-          color="bg-red-900/30 border-red-500/50" 
-          icon={<Home className="text-red-400" size={32} />}
-          isActive={activeZone === 'working'}
+          title="작업 공간" 
+          icon={<Home size={40} />}
+          color="border-red-500 bg-red-900/10"
+          isActive={isWorkingActive}
         >
-          {activeZone === 'working' && <FileObject type="modified" />}
+           {visualState === 'initial' && <Lock className="text-gray-500 mb-2" />}
+           <AnimatePresence>
+             {showFileInWorking && (
+               <GameFile label="index.html" color="bg-red-500" />
+             )}
+           </AnimatePresence>
         </Zone>
 
         {/* Staging Area */}
         <Zone 
-          title="Staging Area" 
-          sub="Hallway Box" 
-          color="bg-green-900/30 border-green-500/50" 
-          icon={<Box className="text-green-400" size={32} />}
-          isActive={activeZone === 'staging'}
+          title="임시 저장" 
+          icon={<Box size={40} />}
+          color="border-green-500 bg-green-900/10"
+          isActive={isStagingActive}
         >
-           {activeZone === 'staging' && <FileObject type="staged" />}
+          <AnimatePresence>
+            {showFileInStaging && (
+              <GameFile label="index.html" color="bg-green-500" icon="📦" />
+            )}
+          </AnimatePresence>
         </Zone>
 
-        {/* Local Repo */}
+        {/* Local Repository */}
         <Zone 
-          title="Local Repository" 
-          sub="Storage" 
-          color="bg-blue-900/30 border-blue-500/50" 
-          icon={<Archive className="text-blue-400" size={32} />}
-          isActive={activeZone === 'local'}
+          title="로컬 저장소" 
+          icon={<Archive size={40} />}
+          color="border-blue-500 bg-blue-900/10"
+          isActive={isLocalActive}
         >
-           {activeZone === 'local' && <FileObject type="committed" />}
+          <AnimatePresence>
+            {showFileInLocal && (
+              <GameFile label={commitMessage || "Version 1"} color="bg-blue-500" icon="🗳️" />
+            )}
+          </AnimatePresence>
         </Zone>
 
-        {/* Remote Repo */}
+        {/* Remote Repository */}
         <Zone 
-          title="Remote Repository" 
-          sub="Cloud Center" 
-          color="bg-purple-900/30 border-purple-500/50" 
-          icon={<Cloud className="text-purple-400" size={32} />}
-          isActive={activeZone === 'remote'}
+          title="원격 저장소" 
+          icon={<Cloud size={40} />}
+          color="border-purple-500 bg-purple-900/10"
+          isActive={isRemoteActive}
         >
-           {activeZone === 'remote' && <FileObject type="pushed" />}
+          <AnimatePresence>
+            {showFileInRemote ? (
+              <GameFile label="Friend's Update" color="bg-yellow-500" icon="🎁" />
+            ) : (
+                null
+            )}
+          </AnimatePresence>
         </Zone>
+
       </div>
     </div>
   );
 };
 
 const Zone: React.FC<{
-  title: string; 
-  sub: string; 
-  color: string; 
-  icon: React.ReactNode; 
-  isActive: boolean;
-  children: React.ReactNode;
-}> = ({ title, sub, color, icon, isActive, children }) => (
-  <div className={`relative flex flex-col items-center justify-start pt-8 border-2 rounded-xl transition-all duration-500 ${color} ${isActive ? 'opacity-100 scale-105 shadow-xl' : 'opacity-50 blur-sm scale-95'}`}>
-    <div className="absolute top-4 left-4 opacity-50">{icon}</div>
-    <h3 className="text-lg font-bold text-gray-200">{title}</h3>
-    <p className="text-sm text-gray-400 mb-8">{sub}</p>
-    <div className="flex-1 w-full flex items-center justify-center p-4">
-      <AnimatePresence mode="popLayout">
-        {children}
-      </AnimatePresence>
+  title: string; icon: React.ReactNode; color: string; isActive: boolean; children?: React.ReactNode
+}> = ({ title, icon, color, isActive, children }) => (
+  <motion.div 
+    layout
+    className={`relative rounded-3xl border-4 flex flex-col items-center justify-between p-3 transition-all duration-500 ${color} ${activeStyle(isActive)}`}
+  >
+    <div className={`text-4xl mb-2 ${isActive ? 'text-white' : 'text-gray-600'}`}>{icon}</div>
+    
+    <div className="flex-1 w-full flex items-center justify-center relative">
+       {children}
     </div>
-  </div>
+
+    <div className="text-center mt-2">
+      <h3 className="font-bold text-lg md:text-xl text-white">{title}</h3>
+    </div>
+  </motion.div>
 );
 
-const FileObject: React.FC<{ type: string }> = ({ type }) => {
-  return (
-    <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      className="flex flex-col items-center gap-2"
-    >
-      <div className="bg-gray-100 p-4 rounded-lg shadow-lg text-gray-900">
-        {type === 'modified' && <div className="text-3xl">📄</div>}
-        {type === 'staged' && <div className="text-3xl">📦</div>}
-        {type === 'committed' && <div className="text-3xl">🗳️</div>}
-        {type === 'pushed' && <div className="text-3xl">🚚</div>}
-      </div>
-      <span className="text-xs font-mono bg-black/50 px-2 py-1 rounded text-white">{type}</span>
-    </motion.div>
-  );
-};
+const GameFile: React.FC<{ label: string; color: string; icon?: string }> = ({ label, color, icon }) => (
+  <motion.div
+    initial={{ scale: 0, y: 50, opacity: 0 }}
+    animate={{ scale: 1, y: 0, opacity: 1 }}
+    exit={{ scale: 0, y: -50, opacity: 0 }}
+    className={`flex flex-col items-center gap-2 z-10 max-w-[120px] text-center`}
+  >
+    <div className={`w-16 h-16 ${color} rounded-lg shadow-2xl flex items-center justify-center text-3xl text-white font-bold relative group`}>
+        {icon || "📄"}
+        <div className="absolute inset-0 bg-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
+    </div>
+    <span className="text-[10px] leading-tight bg-black/60 px-2 py-1 rounded text-white font-mono break-words w-full">{label}</span>
+  </motion.div>
+);

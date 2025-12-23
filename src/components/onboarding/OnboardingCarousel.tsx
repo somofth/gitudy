@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useGameStore } from '../../store/useGameStore';
 import { onboardingConcepts, onboardingCommands } from '../../data/onboardingData';
-import type { GamePhase } from '../../types/game';
+
 
 interface Props {
   phase: 'onboarding-concepts' | 'onboarding-commands';
@@ -44,9 +44,17 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white p-6 overflow-hidden relative">
       {/* progress indicator */}
-      <div className="absolute top-8 flex gap-2">
+      <div className="absolute top-8 w-full max-w-md flex gap-2 justify-center px-6">
          {slides.map((_, idx) => (
-             <div key={idx} className={`w-12 h-1 rounded-full ${idx <= currentIndex ? 'bg-blue-500' : 'bg-gray-700'}`} />
+             <motion.div 
+               key={idx} 
+               initial={false}
+               animate={{ 
+                 backgroundColor: idx <= currentIndex ? '#3b82f6' : '#374151'
+               }}
+               transition={{ duration: 0.5 }}
+               className="flex-1 h-1 rounded-full" 
+             />
          ))}
       </div>
 

@@ -6,7 +6,7 @@ export const GameLayout: React.FC = () => {
   return (
     <div className="flex flex-col h-screen bg-gray-900 overflow-hidden">
       {/* Top/Left: Visuals */}
-      <div className="flex-[2] overflow-hidden">
+      <div className="flex-[2] overflow-hidden flex flex-col">
         <ViewArea />
       </div>
       
