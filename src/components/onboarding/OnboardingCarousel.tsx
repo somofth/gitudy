@@ -28,7 +28,7 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
       if (phase === 'onboarding-concepts') {
         setPhase('concept-quiz');
       } else {
-        setPhase('game');
+        setPhase('loading');
       }
     }
   };
@@ -58,18 +58,19 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3 }}
-            className="bg-gray-800 p-8 rounded-2xl shadow-2xl flex flex-col items-center text-center w-full min-h-[400px] border border-gray-700"
+            className="bg-gray-800 px-5 py-8 rounded-2xl shadow-2xl flex flex-col items-center text-center w-full min-h-[400px] border border-gray-700"
           >
-            <div className="text-6xl mb-6">{slide.icon}</div>
-            <h2 className="text-2xl font-bold mb-2 text-blue-400">{slide.title}</h2>
+            {slide.image ? (
+               <img src={slide.image} alt={slide.title} className="w-64 h-auto mb-6 object-contain" />
+            ) : (
+               <div className="text-6xl mb-6">{slide.icon}</div>
+            )}
             {slide.command && (
-              <div className="bg-black/30 px-3 py-1 rounded text-green-400 font-mono text-lg mb-4">
+              <div className="bg-black/30 px-3 py-1 rounded text-green-400 font-mono text-xl mb-4">
                 {slide.command}
               </div>
             )}
-            {slide.subTitle && (
-              <h3 className="text-xl font-semibold mb-6 text-gray-400">{slide.subTitle}</h3>
-            )}
+            <h2 className="text-2xl font-bold mb-3 text-blue-400">{slide.title}</h2>
             <p className="text-gray-300 leading-relaxed whitespace-pre-wrap text-left w-full px-4">
               {slide.description}
             </p>

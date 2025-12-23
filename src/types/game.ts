@@ -1,4 +1,4 @@
-export type GamePhase = 'title' | 'onboarding-concepts' | 'concept-quiz' | 'onboarding-commands' | 'game';
+export type GamePhase = 'title' | 'onboarding-concepts' | 'concept-quiz' | 'onboarding-commands' | 'loading' | 'story-intro' | 'game' | 'success';
 
 export type ZoneType = 'working' | 'staging' | 'local' | 'remote';
 
