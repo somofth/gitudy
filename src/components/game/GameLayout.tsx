@@ -4,14 +4,14 @@ import { ControlArea } from './ControlArea';
 
 export const GameLayout: React.FC = () => {
   return (
-    <div className="flex flex-col h-screen bg-gray-900 overflow-hidden">
+    <div className="flex flex-col min-h-[100dvh] bg-gray-900 overflow-y-auto">
       {/* Top/Left: Visuals */}
-      <div className="flex-[2] overflow-hidden flex flex-col">
+      <div className="flex-1 flex flex-col min-h-[400px]">
         <ViewArea />
       </div>
       
       {/* Bottom/Right: Controls */}
-      <div className="h-1/3 min-h-[300px] border-t border-gray-700">
+      <div className="shrink-0 min-h-[300px] border-t border-gray-700 bg-gray-900 sticky bottom-0 z-10">
         <ControlArea />
       </div>
     </div>
