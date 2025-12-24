@@ -28,7 +28,7 @@ export const StoryIntro: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-[100dvh] bg-gray-900 text-white p-8 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center w-full min-h-[100dvh] bg-gray-900 text-white p-8 relative overflow-y-auto">
       {/* Background Ambience */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute top-10 right-10"><Code size={200} /></div>

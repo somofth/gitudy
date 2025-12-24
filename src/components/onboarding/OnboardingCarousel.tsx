@@ -42,7 +42,7 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
   const slide = slides[currentIndex];
 
   return (
-    <div className="flex flex-col items-center justify-center h-[100dvh] bg-gray-900 text-white p-6 overflow-hidden relative">
+    <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-gray-900 text-white p-6 relative overflow-y-auto">
       {/* progress indicator */}
       <div className="absolute top-8 w-full max-w-md px-6">
           <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">

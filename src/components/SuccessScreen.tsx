@@ -56,7 +56,7 @@ export const SuccessScreen: React.FC = () => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white relative overflow-hidden">
+        <div className="w-full min-h-[100dvh] flex flex-col items-center justify-center bg-gray-900 text-white relative overflow-y-auto py-10">
              {/* Background Glow */}
              <div className="absolute inset-0 bg-blue-900/10 pointer-events-none" />
              
