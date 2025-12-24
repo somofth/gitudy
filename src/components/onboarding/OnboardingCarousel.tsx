@@ -42,7 +42,7 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
   const slide = slides[currentIndex];
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white p-6 overflow-hidden relative">
+    <div className="flex flex-col items-center justify-center h-[100dvh] bg-gray-900 text-white p-6 overflow-hidden relative">
       {/* progress indicator */}
       <div className="absolute top-8 w-full max-w-md px-6">
           <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
@@ -57,7 +57,7 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
           </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center w-full max-w-md mt-12">
+      <div className="flex-1 flex items-center justify-center w-full max-w-md mt-12 mb-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
@@ -89,7 +89,7 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
         </AnimatePresence>
       </div>
 
-      <div className="w-full max-w-md flex justify-between items-center mt-8 pb-8">
+      <div className="w-full max-w-md flex justify-between items-center pb-16 md:pb-8">
         <button
           onClick={prevSlide}
           disabled={currentIndex === 0}

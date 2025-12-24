@@ -60,6 +60,12 @@ export const ViewArea: React.FC = () => {
   //  - In Remote Zone: Render if !isPulling
   //  - In Working Zone: Render if isPulling
 
+  // Content Presence Logic for Dynamic Resizing
+  const hasWorkingContent = visualState === 'initial' || (showFileInWorking && !isPulling) || isPulling;
+  const hasStagingContent = !!showFileInStaging;
+  const hasLocalContent = showFileInLocal && !isPushing;
+  const hasRemoteContent = (showFileInRemote && !isPulling && !isPushing) || isPushing;
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-2 bg-gray-900 relative">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-6xl h-auto min-h-[40vh]">
@@ -70,6 +76,7 @@ export const ViewArea: React.FC = () => {
           icon={<Home size={40} />}
           color="border-red-500 bg-red-900/10"
           isActive={isWorkingActive}
+          hasContent={hasWorkingContent}
         >
            {visualState === 'initial' && <Lock className="text-gray-500 mb-2" />}
            <AnimatePresence>
@@ -91,6 +98,7 @@ export const ViewArea: React.FC = () => {
           icon={<Box size={40} />}
           color="border-green-500 bg-green-900/10"
           isActive={isStagingActive}
+          hasContent={hasStagingContent}
         >
           <AnimatePresence>
             {showFileInStaging && (
@@ -105,6 +113,7 @@ export const ViewArea: React.FC = () => {
           icon={<Archive size={40} />}
           color="border-blue-500 bg-blue-900/10"
           isActive={isLocalActive}
+          hasContent={hasLocalContent}
         >
           <AnimatePresence>
             {/* Standard Local File */}
@@ -120,6 +129,7 @@ export const ViewArea: React.FC = () => {
           icon={<Cloud size={40} />}
           color="border-purple-500 bg-purple-900/10"
           isActive={isRemoteActive}
+          hasContent={hasRemoteContent}
         >
           <AnimatePresence>
             {/* Standard Remote File (Friend's Update or My Push) */}
@@ -140,20 +150,31 @@ export const ViewArea: React.FC = () => {
 };
 
 const Zone: React.FC<{
-  title: string; icon: React.ReactNode; color: string; isActive: boolean; children?: React.ReactNode
-}> = ({ title, icon, color, isActive, children }) => (
+  title: string; icon: React.ReactNode; color: string; isActive: boolean; hasContent: boolean; children?: React.ReactNode
+}> = ({ title, icon, color, isActive, hasContent, children }) => (
   <motion.div 
     layout
-    className={`relative rounded-3xl border-4 flex flex-col items-center justify-between p-6 min-h-[250px] transition-all duration-500 ${color} ${activeStyle(isActive)}`}
+    className={`relative rounded-3xl border-4 flex flex-col items-center justify-between transition-all duration-500 h-full ${color} ${activeStyle(isActive)} ${hasContent ? 'p-6 min-h-[250px]' : 'p-2 min-h-[80px] justify-center'}`}
   >
-    <div className={`text-5xl mb-4 ${isActive ? 'text-white' : 'text-gray-600'}`}>{icon}</div>
+    <AnimatePresence>
+      {hasContent && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0 }} 
+          animate={{ opacity: 1, scale: 1 }} 
+          exit={{ opacity: 0, scale: 0 }}
+          className={`text-5xl mb-4 ${isActive ? 'text-white' : 'text-gray-600'}`}
+        >
+          {icon}
+        </motion.div>
+      )}
+    </AnimatePresence>
     
-    <div className="flex-1 w-full flex items-center justify-center relative my-6">
+    <div className={`flex-1 w-full flex items-center justify-center relative ${hasContent ? 'my-6' : 'my-0'}`}>
        {children}
     </div>
 
-    <div className="text-center mt-4">
-      <h3 className="font-bold text-xl md:text-2xl text-white">{title}</h3>
+    <div className="text-center mt-2">
+      <h3 className={`font-bold transition-all text-white ${hasContent ? 'text-xl md:text-2xl' : 'text-sm opacity-80'}`}>{title}</h3>
     </div>
   </motion.div>
 );
