@@ -11,7 +11,7 @@ export const GameLayout: React.FC = () => {
       </div>
       
       {/* Bottom/Right: Controls */}
-      <div className="shrink-0 min-h-[300px] border-t border-gray-700 bg-gray-900 sticky bottom-0 z-10">
+      <div className="shrink-0 min-h-[300px] border-t border-gray-700 bg-gray-900 sticky bottom-0 z-10 pb-8">
         <ControlArea />
       </div>
     </div>

@@ -26,7 +26,7 @@ function App() {
   }, [setPhase]);
 
   return (
-    <div className="w-full h-[100dvh] bg-gray-900 text-white overflow-hidden">
+    <div className="w-full min-h-[100dvh] bg-gray-900 text-white">
       <Toaster position="top-center" richColors />
       {currentPhase === 'title' && <TitleScreen />}
       {(currentPhase === 'onboarding-concepts' || currentPhase === 'onboarding-commands') && (
