@@ -63,7 +63,7 @@ export const ConceptQuiz: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white p-6 relative">
+    <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-gray-900 text-white p-6 relative overflow-y-auto">
       <AnimatePresence mode="wait">
         <motion.div 
           key={currentQuizIdx}
