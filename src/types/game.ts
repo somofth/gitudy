@@ -23,4 +23,8 @@ export interface GameState {
   setPhase: (phase: GamePhase) => void;
   submitCommand: (command: string) => void;
   nextStep: () => void;
+  isAnimatingSuccess: boolean;
+  setAnimatingSuccess: (isAnimating: boolean) => void;
+  errorCount: number;
+  incrementError: () => void;
 }

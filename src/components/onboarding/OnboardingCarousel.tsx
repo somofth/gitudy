@@ -44,18 +44,17 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white p-6 overflow-hidden relative">
       {/* progress indicator */}
-      <div className="absolute top-8 w-full max-w-md flex gap-2 justify-center px-6">
-         {slides.map((_, idx) => (
+      <div className="absolute top-8 w-full max-w-md px-6">
+          <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
              <motion.div 
-               key={idx} 
                initial={false}
                animate={{ 
-                 backgroundColor: idx <= currentIndex ? '#3b82f6' : '#374151'
+                 width: `${((currentIndex + 1) / slides.length) * 100}%`
                }}
-               transition={{ duration: 0.5 }}
-               className="flex-1 h-1 rounded-full" 
+               transition={{ duration: 0.5, ease: "easeInOut" }}
+               className="h-full bg-blue-500" 
              />
-         ))}
+          </div>
       </div>
 
       <div className="flex-1 flex items-center justify-center w-full max-w-md mt-12">
@@ -69,7 +68,11 @@ export const OnboardingCarousel: React.FC<Props> = ({ phase }) => {
             className="bg-gray-800 px-5 py-8 rounded-2xl shadow-2xl flex flex-col items-center text-center w-full min-h-[400px] border border-gray-700"
           >
             {slide.image ? (
-               <img src={slide.image} alt={slide.title} className="w-64 h-auto mb-6 object-contain" />
+               <img 
+                 src={slide.image} 
+                 alt={slide.title} 
+                 className="w-full max-w-[200px] h-40 object-cover rounded-lg mb-6 border border-gray-700 shadow-md" 
+               />
             ) : (
                <div className="text-6xl mb-6">{slide.icon}</div>
             )}

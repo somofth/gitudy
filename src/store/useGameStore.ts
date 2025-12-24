@@ -13,4 +13,8 @@ export const useGameStore = create<GameState>((set) => ({
       console.log(`Command submitted: ${command}`);
   },
   nextStep: () => set((state) => ({ currentStepId: state.currentStepId + 1 })),
+  isAnimatingSuccess: false,
+  setAnimatingSuccess: (isAnimating) => set({ isAnimatingSuccess: isAnimating }),
+  errorCount: 0,
+  incrementError: () => set((state) => ({ errorCount: state.errorCount + 1 })),
 }));

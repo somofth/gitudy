@@ -4,7 +4,16 @@ import { Share2, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 
+import { useGameStore } from '../store/useGameStore';
+
 export const SuccessScreen: React.FC = () => {
+    const { errorCount } = useGameStore();
+
+    const getFeedbackMessage = () => {
+        if (errorCount === 0) return "Git의 신이시군요! 완벽합니다. 🌟";
+        if (errorCount <= 2) return "재능이 보이네요! 조금만 더 연습하면 완벽해요. 👍";
+        return "괜찮아요, 실패는 성공의 어머니! 다시 도전해볼까요? 🌱";
+    };
 
     useEffect(() => {
         const duration = 3000;
@@ -30,7 +39,7 @@ export const SuccessScreen: React.FC = () => {
     const handleShare = async () => {
         const shareData = {
             title: 'Git-Vis: Git 개념 마스터!',
-            text: 'Git의 기초 개념을 마스터했어요! 당신도 도전해보세요.',
+            text: `Git의 기초 개념을 마스터했어요! 내 코딩 점수는 [Error: ${errorCount}회]. 당신도 도전해보세요.`,
             url: window.location.href,
         };
 
@@ -65,9 +74,9 @@ export const SuccessScreen: React.FC = () => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4"
+                    className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4"
                 >
-                    Git 재능이 보입니다!
+                    {getFeedbackMessage()}
                 </motion.h1>
 
                 <motion.p 
@@ -76,6 +85,7 @@ export const SuccessScreen: React.FC = () => {
                     transition={{ delay: 0.5 }}
                     className="text-gray-300 text-lg mb-10"
                 >
+                    <span className="text-gray-500 text-sm block mb-2">[ error: {errorCount}회 ]</span>
                     축하합니다! 이제 로컬과 원격을 오가는<br/>
                     Git의 기본 흐름을 완벽하게 익히셨군요.
                 </motion.p>

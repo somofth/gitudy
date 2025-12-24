@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/useGameStore';
-import { Coffee, Code } from 'lucide-react';
+import { Coffee, Code, ChevronRight } from 'lucide-react';
 
 export const StoryIntro: React.FC = () => {
   const { setPhase } = useGameStore();
   const [textIndex, setTextIndex] = useState(0);
 
   const texts = [
-    "당신은 밤새 코딩 중인 힘없는 대학생입니다...",
-    "내일이 과제 마감일인데, 아직 코드는 엉망이죠.",
-    "교수님: \"자네, Git으로 버전 관리는 하고 있나?\"",
-    "당신: \"...네? 그게 뭐죠? 먹는 건가요?\"",
+    "당신은 밤새 코딩 중인\n 힘없는 대학생입니다...",
+    "내일이 과제 마감일인데,\n 아직 코드는 엉망이죠.",
+    "\"자네, Git으로 버전 관리는 하고 있나?\"",
+    "\"...네? 그게 뭐죠? 먹는 건가요?\"",
     "지금부터 Git의 힘을 빌려, 과제를 무사히 제출해봅시다!"
   ];
 
@@ -52,16 +52,29 @@ export const StoryIntro: React.FC = () => {
       </div>
 
       {textIndex === texts.length - 1 && (
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-          onClick={() => setPhase('game')}
-          className="z-10 mt-12 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-blue-500/30 transition-all"
-        >
-          미션 시작하기 🚀
-        </motion.button>
+        <div className="flex flex-col items-center gap-4 mt-12 z-10">
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+            onClick={() => setPhase('game')}
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-blue-500/30 transition-all"
+          >
+            미션 시작하기 🚀
+          </motion.button>
+        </div>
       )}
+      
+      {/* Skip Button */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        onClick={() => setPhase('game')}
+        className="absolute top-8 right-8 text-gray-400 hover:text-white text-base font-medium transition-colors z-20 flex items-center gap-1"
+      >
+        SKIP <ChevronRight size={16} />
+      </motion.button>
     </div>
   );
 };

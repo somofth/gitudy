@@ -28,22 +28,29 @@ export const ControlArea: React.FC = () => {
 
             triggerSuccess();
         } else {
+            useGameStore.getState().incrementError();
             toast.error(step.feedback.error);
         }
     };
 
     const triggerSuccess = () => {
+        // Start animation immediately
+        useGameStore.getState().setAnimatingSuccess(true);
+
         toast.success(step.feedback.success, {
             duration: 2000,
         });
         setTimeout(() => {
+            // Stop animation and move to next step
+            useGameStore.getState().setAnimatingSuccess(false);
+
             if (activeStepIndex >= quizSteps.length - 1) {
                 // If this was the last step
                 useGameStore.getState().setPhase('success');
             } else {
                 nextStep();
             }
-        }, 1500);
+        }, 2500); // Increased delay to allow for animation
     };
 
     const handleCommitSubmit = (e: React.FormEvent) => {

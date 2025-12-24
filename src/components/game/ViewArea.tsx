@@ -33,6 +33,33 @@ export const ViewArea: React.FC = () => {
   // Get commit message for display
   const { commitMessage } = useGameStore();
 
+  // Animation State
+  const { isAnimatingSuccess } = useGameStore();
+
+  // Animation Logic:
+  // If pushing (Step 4, index 3) and animating success -> Show file in Remote (Red) instead of Local
+  // If pulling (Step 5, index 4) and animating success -> Show file in Working (Yellow) instead of Remote
+
+  const isPushing = step.id === 4 && isAnimatingSuccess;
+  const isPulling = step.id === 5 && isAnimatingSuccess;
+
+  // For Push: 
+  // - showFileInLocal is true normally. If pushing, we HIDE local and SHOW remote with same layoutId.
+  // - But wait, 'pushed' state (next state) has file in remote. 
+  // 'committed' state (current) has file in local.
+  // We want to simulate the transition.
+  
+  // Actually, simplified approach:
+  // Push Animation:
+  //  - Render a "Flying File" with layoutId="pushed-file"
+  //  - In Local Zone: Render if !isPushing
+  //  - In Remote Zone: Render if isPushing
+  
+  // Pull Animation:
+  //  - Render "Flying File" with layoutId="pulled-file"
+  //  - In Remote Zone: Render if !isPulling
+  //  - In Working Zone: Render if isPulling
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-2 bg-gray-900 relative">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-6xl h-auto min-h-[40vh]">
@@ -46,8 +73,14 @@ export const ViewArea: React.FC = () => {
         >
            {visualState === 'initial' && <Lock className="text-gray-500 mb-2" />}
            <AnimatePresence>
-             {showFileInWorking && (
+             {/* Standard Working File */}
+             {showFileInWorking && !isPulling && (
                <GameFile label="index.html" color="bg-red-500" />
+             )}
+             
+             {/* Pulled File Arriving (Yellow) */}
+             {isPulling && (
+                <GameFile label="Friend's Update" color="bg-yellow-500" icon="🎁" layoutId="pulled-file" />
              )}
            </AnimatePresence>
         </Zone>
@@ -61,7 +94,7 @@ export const ViewArea: React.FC = () => {
         >
           <AnimatePresence>
             {showFileInStaging && (
-              <GameFile label="index.html" color="bg-green-500" icon="📦" />
+              <GameFile label="index.html" color="bg-red-500" icon="📦" />
             )}
           </AnimatePresence>
         </Zone>
@@ -74,8 +107,9 @@ export const ViewArea: React.FC = () => {
           isActive={isLocalActive}
         >
           <AnimatePresence>
-            {showFileInLocal && (
-              <GameFile label={commitMessage || "Version 1"} color="bg-blue-500" icon="🗳️" />
+            {/* Standard Local File */}
+            {showFileInLocal && !isPushing && (
+              <GameFile label={commitMessage || "Version 1"} color="bg-red-500" icon="🗳️" layoutId="pushed-file" />
             )}
           </AnimatePresence>
         </Zone>
@@ -88,10 +122,14 @@ export const ViewArea: React.FC = () => {
           isActive={isRemoteActive}
         >
           <AnimatePresence>
-            {showFileInRemote ? (
-              <GameFile label="Friend's Update" color="bg-yellow-500" icon="🎁" />
-            ) : (
-                null
+            {/* Standard Remote File (Friend's Update or My Push) */}
+            {showFileInRemote && !isPulling && !isPushing ? (
+              <GameFile label="Friend's Update" color="bg-yellow-500" icon="🎁" layoutId="pulled-file" />
+            ) : null}
+
+            {/* Pushed File Arriving (Red) */}
+            {isPushing && (
+               <GameFile label={commitMessage || "Version 1"} color="bg-red-500" icon="🗳️" layoutId="pushed-file" />
             )}
           </AnimatePresence>
         </Zone>
@@ -106,26 +144,27 @@ const Zone: React.FC<{
 }> = ({ title, icon, color, isActive, children }) => (
   <motion.div 
     layout
-    className={`relative rounded-3xl border-4 flex flex-col items-center justify-between p-3 transition-all duration-500 ${color} ${activeStyle(isActive)}`}
+    className={`relative rounded-3xl border-4 flex flex-col items-center justify-between p-6 min-h-[250px] transition-all duration-500 ${color} ${activeStyle(isActive)}`}
   >
-    <div className={`text-4xl mb-2 ${isActive ? 'text-white' : 'text-gray-600'}`}>{icon}</div>
+    <div className={`text-5xl mb-4 ${isActive ? 'text-white' : 'text-gray-600'}`}>{icon}</div>
     
-    <div className="flex-1 w-full flex items-center justify-center relative">
+    <div className="flex-1 w-full flex items-center justify-center relative my-6">
        {children}
     </div>
 
-    <div className="text-center mt-2">
-      <h3 className="font-bold text-lg md:text-xl text-white">{title}</h3>
+    <div className="text-center mt-4">
+      <h3 className="font-bold text-xl md:text-2xl text-white">{title}</h3>
     </div>
   </motion.div>
 );
 
-const GameFile: React.FC<{ label: string; color: string; icon?: string }> = ({ label, color, icon }) => (
+const GameFile: React.FC<{ label: string; color: string; icon?: string; layoutId?: string }> = ({ label, color, icon, layoutId }) => (
   <motion.div
-    initial={{ scale: 0, y: 50, opacity: 0 }}
+    layoutId={layoutId} 
+    initial={layoutId ? undefined : { scale: 0, y: 50, opacity: 0 }}
     animate={{ scale: 1, y: 0, opacity: 1 }}
     exit={{ scale: 0, y: -50, opacity: 0 }}
-    className={`flex flex-col items-center gap-2 z-10 max-w-[120px] text-center`}
+    className={`flex flex-col items-center gap-2 z-10 max-w-[120px] text-center absolute`}
   >
     <div className={`w-16 h-16 ${color} rounded-lg shadow-2xl flex items-center justify-center text-3xl text-white font-bold relative group`}>
         {icon || "📄"}

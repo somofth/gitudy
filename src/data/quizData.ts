@@ -9,7 +9,7 @@ export const quizSteps: QuizStep[] = [
     options: ['git init', 'git start', 'git open', 'git help'],
     feedback: {
       success: "좋아! 이제 이 공간은 Git 감시 하에 있어. 관리자가 배치됐어!",
-      error: "아직 Git이 이 폴더를 모르고 있어. 초기화부터 해야 해!"
+      error: "Git이 이 폴더를 관리하게 만드려면 '초기화(init)'가 필요해!"
     }
   },
   {
@@ -20,7 +20,7 @@ export const quizSteps: QuizStep[] = [
     options: ['git commit', 'git push', 'git add', 'git move'],
     feedback: {
       success: "나이스 샷! 이제 포장할 물건을 다 골랐어.",
-      error: "📦 박스에 담지도 않았는데 포장할 순 없어! 먼저 담아줘."
+      error: "📦 박스(Staging Area)에 먼저 담아야(add) 포장(commit)을 할 수 있어!"
     }
   },
   {
@@ -31,7 +31,7 @@ export const quizSteps: QuizStep[] = [
     options: ['git save', 'git commit', 'git status', 'git add'],
     feedback: {
       success: "기록 완료! 언제든 이 상태로 시간을 되돌릴 수 있게 됐어.",
-      error: "아직 테이프로 포장을 안 했어! 저장하려면 커밋을 해야 해."
+      error: "단순한 저장이 아니야. '의미 있는 단위'로 버전을 확정(commit)해야 해."
     }
   },
   {
@@ -42,7 +42,7 @@ export const quizSteps: QuizStep[] = [
     options: ['git upload', 'git pull', 'git push', 'git send'],
     feedback: {
       success: "발송 성공! 이제 민수도 이 코드를 볼 수 있어.",
-      error: "🚚 엥? 물건을 보내야지 가져오면 안 되지!"
+      error: "내 코드를 원격 저장소로 '밀어올려야(push)' 협업이 가능해!"
     }
   },
   {
@@ -53,7 +53,7 @@ export const quizSteps: QuizStep[] = [
     options: ['git clone', 'git push', 'git fetch', 'git pull'],
     feedback: {
       success: "동기화 완료! 이제 친구가 만든 코드 위에서 계속 작업할 수 있어.",
-      error: "clone은 아예 처음 복제할 때 쓰는 거야! 이미 작업 중이라면..?"
+      error: "이미 작업 중인 프로젝트야. 원격의 '변경사항만' 당겨와야(pull) 해!"
     }
   }
 ];
