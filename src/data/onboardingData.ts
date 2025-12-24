@@ -34,7 +34,7 @@ export const onboardingConcepts: OnboardingSlideData[] = [
     id: 4,
     title: '임시 저장',
     subTitle: 'Staging Area',
-    description: '작업한 파일 중, 버전으로 남길 파일만 선별하여 올려두는 "가상의 준비 공간"입니다.\n\n"이 파일과 저 파일만 묶어서 저장해야지!" 라고 결정하는 단계로, 커밋(Commit) 직전의 대기 상태입니다.',
+    description: '작업한 파일 중, 버전으로 남길 파일만 선별하여 올려두는 "가상의 준비 공간, staging area"입니다.\n\n"이 파일과 저 파일만 묶어서 저장해야지!" 라고 결정하는 단계로, 커밋(Commit) 직전의 대기 상태입니다.',
     icon: '📦'
   },
   {
